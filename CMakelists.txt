@@ -1,0 +1,19 @@
+cmake_minimum_required(VERSION 3.16)
+
+project(CelerityEngine)
+
+set(CMAKE_CXX_STANDARD 17)
+
+include_directories(include)
+
+add_executable(
+    CelerityEngine
+
+    src/main.cpp
+    src/CSVReader.cpp
+    src/MovingAverageStrategy.cpp
+    src/Portfolio.cpp
+    src/ExecutionHandler.cpp
+    src/Backtester.cpp
+    src/PerformanceMetrics.cpp
+)
