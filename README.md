@@ -16,7 +16,7 @@
 
 > *Unlike simple, loop-based (vectorized) backtesters that often suffer from look-ahead bias and unrealistic execution assumptions, Celerity Engine is designed to mirror production quantitative trading systems. By processing market data, generating signals, and simulating realistic order execution through a strict event queue, it provides a highly accurate simulation environment with sub-microsecond event processing.*
 
-## 📊 System Performance & Accuracy
+## System Performance & Accuracy
 
 To demonstrate institutional capabilities, Celerity Engine actively profiles its own execution efficiency and trade metrics:
 
@@ -24,7 +24,7 @@ To demonstrate institutional capabilities, Celerity Engine actively profiles its
 * **Trade Accuracy (Win Rate)**: **~58.4%** accuracy across optimized dual moving average sweeps.
 * **Profit Factor**: **~1.21**, calculating gross profits vs. gross losses (strictly including simulated slippage and dynamic commission costs).
 
-## 📌 Key Features
+## Key Features
 
 * **Strict Event-Driven Architecture**: Components communicate exclusively via an Event Queue (`MarketEvent`, `SignalEvent`, `OrderEvent`, `FillEvent`), guaranteeing zero look-ahead bias.
 * **Ultra-Low Latency Design**: Core event loop is optimized for high throughput, achieving an average event processing latency of `< 5 µs` measured directly in the engine.
@@ -39,7 +39,7 @@ To demonstrate institutional capabilities, Celerity Engine actively profiles its
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 The engine is highly modular, decoupling data ingestion from strategy logic, execution modeling, and portfolio accounting:
 
@@ -54,7 +54,7 @@ The engine is highly modular, decoupling data ingestion from strategy logic, exe
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 * A C++17 compatible compiler (e.g., GCC, Clang, or MSVC)
@@ -87,7 +87,7 @@ g++ -std=c++17 -I include src/*.cpp -o QuantBacktester.exe
 
 ---
 
-## 💻 Usage & Sample Output
+## Usage & Sample Output
 
 By default, the engine is configured in **Concurrent Parameter Sweep Mode**. It optimizes trading strategies (e.g., Dual Moving Average Crossover) by spawning multiple backtest instances in parallel threads, outputting comprehensive quantitative metrics.
 
