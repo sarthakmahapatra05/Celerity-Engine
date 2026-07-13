@@ -52,3 +52,33 @@ double PerformanceMetrics::calculateMaxDrawdown(const std::vector<std::pair<std:
 
     return maxDrawdown;
 }
+
+double PerformanceMetrics::calculateWinRate(const std::vector<double>& tradePnLs) {
+    if (tradePnLs.empty()) return 0.0;
+    
+    int winningTrades = 0;
+    for (double pnl : tradePnLs) {
+        if (pnl > 0) {
+            winningTrades++;
+        }
+    }
+    return static_cast<double>(winningTrades) / tradePnLs.size();
+}
+
+double PerformanceMetrics::calculateProfitFactor(const std::vector<double>& tradePnLs) {
+    if (tradePnLs.empty()) return 0.0;
+
+    double grossProfit = 0.0;
+    double grossLoss = 0.0;
+
+    for (double pnl : tradePnLs) {
+        if (pnl > 0) {
+            grossProfit += pnl;
+        } else if (pnl < 0) {
+            grossLoss -= pnl; // Make it positive
+        }
+    }
+
+    if (grossLoss == 0.0) return grossProfit > 0 ? 9999.0 : 0.0; // Use a high number for infinite profit factor
+    return grossProfit / grossLoss;
+}

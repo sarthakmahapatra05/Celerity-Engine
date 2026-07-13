@@ -3,7 +3,7 @@
 
 Portfolio::Portfolio(CSVReader* dataHandler, std::queue<std::shared_ptr<Event>>* eventsQueue, double initialCapital)
     : dataHandler(dataHandler), eventsQueue(eventsQueue), 
-      initialCapital(initialCapital), currentCash(initialCapital), currentPositions(0) {}
+      initialCapital(initialCapital), currentCash(initialCapital), currentPositions(0), averageEntryPrice(0.0) {}
 
 void Portfolio::updateSignal(std::shared_ptr<Event> event) {
     if (event->type == EventType::SIGNAL) {
@@ -26,10 +26,22 @@ void Portfolio::updateFill(std::shared_ptr<Event> event) {
         
         double fill_val = fill->quantity * fill->fill_cost;
         if (fill->direction == "BUY") {
+            if (currentPositions == 0) {
+                averageEntryPrice = (fill_val + fill->commission) / fill->quantity;
+            } else {
+                double totalCost = (currentPositions * averageEntryPrice) + fill_val + fill->commission;
+                averageEntryPrice = totalCost / (currentPositions + fill->quantity);
+            }
             currentPositions += fill->quantity;
             currentCash -= (fill_val + fill->commission);
         } else if (fill->direction == "SELL") {
+            double pnl = (fill->fill_cost * fill->quantity - fill->commission) - (averageEntryPrice * fill->quantity);
+            closedTradePnLs.push_back(pnl);
+            
             currentPositions -= fill->quantity;
+            if (currentPositions == 0) {
+                averageEntryPrice = 0.0;
+            }
             currentCash += (fill_val - fill->commission);
         }
     }

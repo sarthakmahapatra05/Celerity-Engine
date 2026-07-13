@@ -10,6 +10,9 @@ struct BacktestResult {
     double totalReturn;
     double sharpeRatio;
     double maxDrawdown;
+    double winRate;
+    double profitFactor;
+    double averageLatency;
 };
 
 BacktestResult runBacktest(const std::string& symbol, const std::string& dataFile, int shortWindow, int longWindow) {
@@ -24,6 +27,11 @@ BacktestResult runBacktest(const std::string& symbol, const std::string& dataFil
     result.totalReturn = PerformanceMetrics::calculateTotalReturn(equityCurve);
     result.sharpeRatio = PerformanceMetrics::calculateSharpeRatio(equityCurve);
     result.maxDrawdown = PerformanceMetrics::calculateMaxDrawdown(equityCurve);
+    
+    auto tradePnLs = engine.getTradePnLs();
+    result.winRate = PerformanceMetrics::calculateWinRate(tradePnLs);
+    result.profitFactor = PerformanceMetrics::calculateProfitFactor(tradePnLs);
+    result.averageLatency = engine.getAverageLatency();
     
     return result;
 }
@@ -52,8 +60,11 @@ int main() {
               << std::setw(15) << "Long Window" 
               << std::setw(15) << "Total Return" 
               << std::setw(15) << "Sharpe Ratio" 
-              << std::setw(15) << "Max Drawdown" << std::endl;
-    std::cout << std::string(75, '-') << std::endl;
+              << std::setw(15) << "Max Drawdown" 
+              << std::setw(15) << "Win Rate"
+              << std::setw(15) << "Profit Factor"
+              << std::setw(15) << "Latency(us)" << std::endl;
+    std::cout << std::string(120, '-') << std::endl;
 
     // Collect results
     for (auto& f : futures) {
@@ -63,7 +74,10 @@ int main() {
                   << std::fixed << std::setprecision(4)
                   << std::setw(15) << res.totalReturn 
                   << std::setw(15) << res.sharpeRatio 
-                  << std::setw(15) << res.maxDrawdown << std::endl;
+                  << std::setw(15) << res.maxDrawdown
+                  << std::setw(15) << res.winRate
+                  << std::setw(15) << res.profitFactor
+                  << std::setw(15) << res.averageLatency << std::endl;
     }
 
     std::cout << "\nParameter Sweep Complete." << std::endl;
